@@ -40,6 +40,6 @@ if __name__ == '__main__':
                 chess.append(input_chess[i+k][j:j+8])
             white_error = check_white(chess)
             black_error = check_black(chess)
-            result = min(result, min(white_error,black_error))
+            result = min(result, min(white_error, black_error))
 
     print(result)
