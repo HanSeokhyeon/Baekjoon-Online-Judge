@@ -8,6 +8,8 @@ def n_queen(chess, case, n):
             if v == 0:
                 place_queen(chess, j, i)
                 n_queen(chess, case, n-1)
+                pass
+
 
 
 def place_queen(chess, x, y):
