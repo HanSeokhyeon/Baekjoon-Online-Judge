@@ -7,8 +7,7 @@ def check_rect(rect):
     d = sorted(d)
     if d[0] == d[1] == d[2] == d[3]:
         if d[4] == d[5]:
-            if int(d[0]*(2**0.5)*10000000) == int(d[4]*10000000):
-                return 1
+            return 1
     return 0
 
 
