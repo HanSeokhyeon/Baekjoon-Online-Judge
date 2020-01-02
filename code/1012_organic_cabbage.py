@@ -1,60 +1,51 @@
-from queue import Queue
+#-*- coding:utf-8 -*-
 
-global_visit = {}
+"""
+1012 유기농 배추
+
+구역이 몇개인지 구하는 문제
+
+저번에 DFS로 풀었으니 이번엔 BFS로 풀어보자.
+
+알고리즘: DFS or BFS
+"""
+
+from collections import deque
+import sys
+read = sys.stdin.readline
 
 
-def bfs(graph, start):
-    global global_visit
-    q = Queue()
-    q.put(start)
+def bfs(start):
+    q = deque()
+    q.append(start)
 
-    while q.qsize() > 0:
-        node = q.get()
+    while q:
+        qsize = len(q)
+        for _ in range(qsize):
+            x, y = q.popleft()
 
-        if node not in global_visit:
-            global_visit[node] = True
-            for next_node in graph[node]:
-                q.put(next_node)
+            for dx, dy in [(1, 0), (-1, 0), (0, 1), (0, -1)]:
+                nx, ny = x+dx, y+dy
+                if 0 <= nx < n and 0 <= ny < m:
+                    if bat[nx][ny] == 1:
+                        q.append((nx, ny))
+                        bat[nx][ny] = 0
 
     return 1
 
 
-if __name__ == '__main__':
-    t = int(input())
-    case = []
-    for i in range(t):
-        global_visit = {}
-        m, n, k = map(int, input().split())
-        bat = {}
-        for _ in range(k):
-            a, b = map(int, input().split())
-            bat[(a, b)] = set()
+t = int(read().strip())
+for _ in range(t):
+    m, n, k = map(int, read().strip().split())
+    bat = [[0 for _ in range(m)] for _ in range(n)]
+    for _ in range(k):
+        a, b = map(int, read().strip().split())
+        bat[b][a] = 1
 
-        for v in bat:
-            left = (v[0], v[1] - 1)
-            if left in bat:
-                bat[v].add(left)
-                bat[left].add(v)
-            right = (v[0], v[1] + 1)
-            if right in bat:
-                bat[v].add(right)
-                bat[right].add(v)
-            up = (v[0] + 1, v[1])
-            if up in bat:
-                bat[v].add(up)
-                bat[up].add(v)
-            down = (v[0] - 1, v[1])
-            if down in bat:
-                bat[v].add(down)
-                bat[down].add(v)
+    cnt = 0
+    for i in range(n):
+        for j in range(m):
+            if bat[i][j] == 1:
+                cnt += bfs((i, j))
 
-        count = 0
-
-        for value in bat:
-            if value not in global_visit:
-                count += bfs(bat, value)
-
-        case.append(count)
-
-    for c in case:
-        print(c)
+    print(cnt)
