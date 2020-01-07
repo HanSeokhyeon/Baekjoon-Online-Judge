@@ -16,17 +16,10 @@ read = sys.stdin.readline
 x = int(read().strip())
 now = [64]
 while sum(now) != x:
-    divide = [now[-1]//2, now[-1]//2]
-    if len(now) == 1:
-        if sum(divide[:1]) >= x:
-            now = divide[:1]
-        else:
-            now = divide
+    divide = now[:-1] + [now[-1]//2, now[-1]//2]
+    if sum(divide[:-1]) >= x:
+        now = divide[:-1]
     else:
-        tmp = now[:-1] + divide
-        if sum(tmp[:-1]) >= x:
-            now = tmp[:-1]
-        else:
-            now = tmp
+        now = divide
 
 print(len(now))
