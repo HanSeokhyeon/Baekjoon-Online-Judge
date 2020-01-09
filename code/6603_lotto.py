@@ -1,56 +1,52 @@
-#-*- coding:utf-8 -*-
-
 """
-독일 로또는 1-49 중 6개를 고른다.
-49가지 수 중 k개의 수를 골라 그 수만 가지고 번호를 고른다.
-k=8이면 28가지가 나온다.
-집합 S와 k가 주어지면, 수를 고르는 모든 방법 출력
+6603 로또
 
-알고리즘: DFS, 완전 탐색
+1-49에서 6개를 고른다.
+먼저 k개를 고르고 k개의 숫자에서 조합을 만든다.
 
-1. DFS를 재귀로 만들어 트리를 계속 탐색한다.
+알고리즘: 조합
+
+1. itertools의 combination 사용
+2. 직접 짜기
 """
+
 import sys
+read = sys.stdin.readline
 from itertools import combinations
 
 
-def main_use_combination(lotto_set):
-    comb = list(combinations(lotto_set, 6))
-    for c in comb:
-        print(" ".join(c))
+def get_combinations_use_itertools(k, s):
+    result = combinations(s, 6)
+    for r in result:
+        print(" ".join(map(str, r)))
+    print()
 
 
-def combination(arr, r):
-    # arr = sorted(arr)
+def get_combinations(k, s):
+    def combination(arr, r):
+        # 1.
+        arr = sorted(arr)
 
-    def generate(chosen):
-        if len(chosen) == r:
-            print(" ".join(chosen))
-            return
+        # 2.
+        def generate(chosen):
+            if len(chosen) == r:
+                print(" ".join(map(str, chosen)))
+                return
 
-        if chosen:
-            start = arr.index(chosen[-1]) + 1
-        else:
-            start = 0
+            start = arr.index(chosen[-1]) + 1 if chosen else 0
+            for nxt in range(start, len(arr)):
+                chosen.append(arr[nxt])
+                generate(chosen)
+                chosen.pop()
+        generate([])
 
-        for nxt in range(start, len(arr)):
-            chosen.append(arr[nxt])
-            generate(chosen)
-            chosen.pop()
-
-    generate([])
-
-
-def main_combination(lotto_set):
-    combination(lotto_set, 6)
+    combination(s, 6)
+    print()
 
 
-if __name__ == '__main__':
-    n = 1
-    while n != 0:
-        line = sys.stdin.readline().split()
-        n = int(line[0])
-        s = list(line[1:])
-        # main_use_combination(n, s)
-        main_combination(n, s)
-        print()
+while True:
+    data = list(map(int, read().strip().split()))
+    if data == [0]:
+        break
+    k, s = data[0], data[1:]
+    get_combinations(k, s)
