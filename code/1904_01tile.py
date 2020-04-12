@@ -24,6 +24,9 @@ import sys
 read = sys.stdin.readline
 
 n = int(read().strip())
+if n <= 3:
+    print(n)
+    sys.exit(0)
 
 a, b = 1, 2
 for i in range(3, n+1):
