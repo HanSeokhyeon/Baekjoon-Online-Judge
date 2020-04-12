@@ -39,15 +39,14 @@
 
 import sys
 read = sys.stdin.readline
-
+sys.setrecursionlimit(100000)
 def union(x, y):
     def find(z):
-        parent = p[z]
-        while True:
-            if parent == p[parent]:
-                break
-            parent = p[parent]
-        return parent
+        if z == p[z]:
+            return z
+        else:
+            p[z] = find(p[z])
+        return p[z]
 
     root_x, root_y = find(x), find(y)
     if root_x == root_y:
@@ -62,12 +61,13 @@ n, m = map(int, read().split())
 edges = [list(map(int, read().split())) for _ in range(m)]
 edges = sorted(edges, key=lambda x: x[-1])
 p = list(range(n+1))
-spanning_tree = []
-for from_point, to_point, weight in edges:
-    flag = union(from_point, to_point)
+spanning_tree, cnt = 0, 0
+for u, v, w in edges:
+    flag = union(u, v)
 
     if flag:
-        spanning_tree.append(weight)
-    if len(spanning_tree) == n-1:
+        cnt += 1
+        spanning_tree += w
+    if cnt == n-2:
         break
-print(sum(spanning_tree[:-1]))
+print(spanning_tree)
