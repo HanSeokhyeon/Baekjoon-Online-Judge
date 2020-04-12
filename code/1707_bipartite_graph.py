@@ -11,11 +11,13 @@ import sys
 read = sys.stdin.readline
 
 
-def bfs():
-    q = [1]
-    g = [[1], []]
+def bfs(start):
+    q = [start]
+    global g
+    g[0][start] = True
     visit = {}
     group = True
+    result = 'YES'
     while q:
         new_q = []
         for now in q:
@@ -25,11 +27,32 @@ def bfs():
                     visit[(nxt, now)] = True
                     new_q.append(nxt)
                     if nxt in g[group]:
-                        return 'NO'
-                    g[not group].append(nxt)
+                        result = 'NO'
+                    g[not group][nxt] = True
         group = not group
         q = new_q
-    return 'YES'
+
+    return result, g
+
+
+def dfs(start):
+    q = [(start, True)]
+    global g
+    g[0][start] = True
+    visit = {}
+    result = 'YES'
+    while q:
+        now, group = q.pop()
+        for nxt in graph[now]:
+            if (now, nxt) not in visit:
+                visit[(now, nxt)] = True
+                visit[(nxt, now)] = True
+                q.append((nxt, not group))
+                if nxt in g[group]:
+                    result = 'NO'
+                g[not group][nxt] = True
+
+    return result, g
 
 
 for _ in range(int(read())):
@@ -40,5 +63,11 @@ for _ in range(int(read())):
     for x, y in edges:
         graph[x].append(y)
         graph[y].append(x)
-
-    print(bfs())
+    g = [{}, {}]
+    for i in range(1, v+1):
+        if i in g[0] or i in g[1]:
+            continue
+        answer, (g1, g2) = dfs(i)
+        if answer == 'NO':
+            break
+    print(answer)
